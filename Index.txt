@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Digital Resilience Scorecard</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f7f6;
+      color: #18332d;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #0f5132, #198754);
+      color: white;
+      padding: 45px 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+    }
+
+    .header p {
+      margin: 5px auto;
+      max-width: 750px;
+      line-height: 1.6;
+      opacity: 0.95;
+    }
+
+    .container {
+      max-width: 1050px;
+      margin: 30px auto;
+      padding: 0 18px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 22px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      color: #0f5132;
+    }
+
+    .card h3 {
+      color: #198754;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #66756f;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccd8d3;
+      border-radius: 8px;
+      font-size: 15px;
+      margin-bottom: 18px;
+      background: white;
+    }
+
+    .question {
+      padding: 18px;
+      background: #f8faf9;
+      border-radius: 12px;
+      margin: 15px 0;
+      border-left: 4px solid #198754;
+    }
+
+    .question-title {
+      font-weight: bold;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .scale {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    .scale label {
+      font-weight: normal;
+      cursor: pointer;
+      text-align: center;
+      background: white;
+      border: 1px solid #d8e1de;
+      border-radius: 8px;
+      padding: 10px 5px;
+    }
+
+    .scale input {
+      width: auto;
+      margin: 0 0 5px;
+    }
+
+    .scale span {
+      display: block;
+      font-size: 12px;
+    }
+
+    .button {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 10px;
+      background: #0f5132;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background: #0b3d27;
+    }
+
+    #result {
+      display: none;
+    }
+
+    .score-main {
+      text-align: center;
+      padding: 25px;
+      background: #eef8f3;
+      border-radius: 14px;
+      margin-bottom: 25px;
+    }
+
+    .score-number {
+      font-size: 64px;
+      font-weight: bold;
+      color: #0f5132;
+    }
+
+    .score-label {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .dimensions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .dimension {
+      background: #f8faf9;
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    .dimension-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .dimension-score {
+      font-size: 30px;
+      font-weight: bold;
+      color: #198754;
+    }
+
+    .bar {
+      width: 100%;
+      height: 10px;
+      background: #dfe8e4;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: #198754;
+    }
+
+    .segment {
+      padding: 20px;
+      border-radius: 12px;
+      background: #fff8e6;
+      border-left: 5px solid #e0a800;
+      margin-top: 20px;
+    }
+
+    .segment h3 {
+      margin-top: 0;
+      color: #856404;
+    }
+
+    .recommendation {
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+      background: #f1f8f5;
+    }
+
+    .note {
+      font-size: 12px;
+      color: #687873;
+      line-height: 1.6;
+      margin-top: 20px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 12px;
+      color: #708079;
+    }
+
+    @media(max-width:700px) {
+      .dimensions {
+        grid-template-columns: 1fr;
+      }
+
+      .scale {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .header h1 {
+        font-size: 27px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>Digital Resilience Scorecard</h1>
+  <p>
+    Prototype diagnosis kapabilitas dan ketahanan digital UMKM
+  </p>
+  <p>
+    Digital Access & Adoption • Digital Capability •
+    Digital Market Resilience • Digital Adaptability
+  </p>
+</div>
+
+<div class="container">
+
+  <!-- PROFIL -->
+  <div class="card">
+
+    <h2>Profil UMKM</h2>
+
+    <div class="subtitle">
+      Informasi ini digunakan untuk memberikan konteks diagnosis.
+    </div>
+
+    <label>Nama Usaha</label>
+    <input type="text" id="businessName" placeholder="Contoh: UMKM Maju Jaya">
+
+    <label>Sektor Usaha</label>
+    <select id="sector">
+      <option value="">Pilih sektor</option>
+      <option>Kuliner</option>
+      <option>Perdagangan</option>
+      <option>Jasa</option>
+      <option>Manufaktur</option>
+      <option>Pertanian</option>
+      <option>Kerajinan</option>
+      <option>Lainnya</option>
+    </select>
+
+    <label>Lama Usaha</label>
+    <select id="age">
+      <option value="">Pilih</option>
+      <option>&lt; 2 tahun</option>
+      <option>2–5 tahun</option>
+      <option>6–10 tahun</option>
+      <option>&gt; 10 tahun</option>
+    </select>
+
+  </div>
+
+
+  <!-- A -->
+  <div class="card">
+
+    <h2>A — Digital Access and Adoption</h2>
+
+    <div class="subtitle">
+      Akses dan penggunaan dasar teknologi digital.
+    </div>
+
+    <div id="questionsA"></div>
+
+  </div>
+
+
+  <!-- C -->
+  <div class="card">
+
+    <h2>C — Digital Capability</h2>
+
+    <div class="subtitle">
+      Kemampuan menggunakan teknologi digital secara efektif.
+    </div>
+
+    <div id="questionsC"></div>
+
+  </div>
+
+
+  <!-- M -->
+  <div class="card">
+
+    <h2>M — Digital Market Resilience</h2>
+
+    <div class="subtitle">
+      Kemampuan mempertahankan dan memperluas pilihan pasar.
+    </div>
+
+    <div id="questionsM"></div>
+
+  </div>
+
+
+  <!-- T -->
+  <div class="card">
+
+    <h2>T — Digital Adaptability</h2>
+
+    <div class="subtitle">
+      Kemampuan merespons perubahan dan gangguan.
+    </div>
+
+    <div id="questionsT"></div>
+
+  </div>
+
+
+  <div class="card">
+
+    <button class="button" onclick="calculateScore()">
+      HITUNG DIGITAL RESILIENCE SCORE
+    </button>
+
+  </div>
+
+
+  <!-- RESULT -->
+  <div class="card" id="result">
+
+    <h2>Hasil Digital Resilience Scorecard</h2>
+
+    <div class="score-main">
+
+      <div class="score-number" id="totalScore">0</div>
+
+      <div class="score-label" id="category">
+        -
+      </div>
+
+      <p>
+        Digital Resilience Index (DRI)
+      </p>
+
+    </div>
+
+
+    <h3>Profil Dimensi</h3>
+
+    <div class="dimensions">
+
+      <div class="dimension">
+        <div class="dimension-title">
+          A — Digital Access & Adoption
+        </div>
+
+        <div class="dimension-score" id="scoreA">0</div>
+
+        <div class="bar">
+          <div class="bar-fill" id="barA"></div>
+        </div>
+      </div>
+
+
+      <div class="dimension">
+        <div class="dimension-title">
+          C — Digital Capability
+        </div>
+
+        <div class="dimension-score" id="scoreC">0</div>
+
+        <div class="bar">
+          <div class="bar-fill" id="barC"></div>
+        </div>
+      </div>
+
+
+      <div class="dimension">
+        <div class="dimension-title">
+          M — Digital Market Resilience
+        </div>
+
+        <div class="dimension-score" id="scoreM">0</div>
+
+        <div class="bar">
+          <div class="bar-fill" id="barM"></div>
+        </div>
+      </div>
+
+
+      <div class="dimension">
+        <div class="dimension-title">
+          T — Digital Adaptability
+        </div>
+
+        <div class="dimension-score" id="scoreT">0</div>
+
+        <div class="bar">
+          <div class="bar-fill" id="barT"></div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- SEGMENT -->
+    <div class="segment">
+
+      <h3>Diagnosis Segmen</h3>
+
+      <strong id="segmentName"></strong>
+
+      <p id="segmentDescription"></p>
+
+    </div>
+
+
+    <!-- RECOMMENDATION -->
+    <div class="card" style="margin-top:25px;">
+
+      <h3>Prioritas Intervensi</h3>
+
+      <div id="recommendations"></div>
+
+    </div>
+
+
+    <div class="note">
+      <strong>Catatan metodologis:</strong>
+      Scorecard ini merupakan prototype / proof of concept.
+      Kategori skor dan hasil diagnosis belum merupakan standar resmi
+      dan belum menggantikan validasi empiris instrumen DRI.
+      Hasil digunakan untuk ilustrasi penerjemahan kerangka penelitian
+      ke dalam alat diagnosis digital.
+    </div>
+
+  </div>
+
+</div>
+
+
+<div class="footer">
+  Digital Resilience Scorecard • Prototype Policy Translation Tool
+</div>
+
+
+<script>
+
+const questions = {
+
+  A: [
+    "Usaha memiliki akses internet yang memadai untuk kegiatan usaha.",
+    "Usaha menggunakan pembayaran digital seperti QRIS.",
+    "Usaha menggunakan media sosial untuk kegiatan pemasaran.",
+    "Usaha menggunakan kanal digital untuk menerima pesanan atau transaksi."
+  ],
+
+  C: [
+    "Usaha memiliki katalog produk digital yang diperbarui secara berkala.",
+    "Usaha menggunakan data transaksi untuk memahami penjualan.",
+    "Usaha mengelola informasi atau hubungan dengan pelanggan secara digital.",
+    "Usaha memiliki praktik keamanan akun dan data digital yang memadai."
+  ],
+
+  M: [
+    "Usaha memiliki lebih dari satu kanal penjualan.",
+    "Usaha memiliki pelanggan dari luar wilayah utama usaha.",
+    "Usaha mampu menggunakan kanal digital alternatif ketika satu kanal terganggu.",
+    "Usaha secara aktif mencari atau mengembangkan pelanggan baru melalui kanal digital."
+  ],
+
+  T: [
+    "Usaha mampu menyesuaikan produk ketika terjadi perubahan kebutuhan pelanggan.",
+    "Usaha mampu mengubah metode pemesanan atau penjualan ketika diperlukan.",
+    "Usaha memiliki alternatif pemasok atau cara memperoleh bahan/input usaha.",
+    "Usaha mampu menyesuaikan proses operasi ketika terjadi gangguan."
+  ]
+
+};
+
+
+function createQuestions() {
+
+  Object.keys(questions).forEach(dim => {
+
+    const container =
+      document.getElementById("questions" + dim);
+
+    questions[dim].forEach((q, index) => {
+
+      const name = dim + index;
+
+      container.innerHTML += `
+
+        <div class="question">
+
+          <div class="question-title">
+            ${index + 1}. ${q}
+          </div>
+
+          <div class="scale">
+
+            <label>
+              <input type="radio" name="${name}" value="1">
+              <span>1<br>Sangat rendah</span>
+            </label>
+
+            <label>
+              <input type="radio" name="${name}" value="2">
+              <span>2<br>Rendah</span>
+            </label>
+
+            <label>
+              <input type="radio" name="${name}" value="3">
+              <span>3<br>Sedang</span>
+            </label>
+
+            <label>
+              <input type="radio" name="${name}" value="4">
+              <span>4<br>Tinggi</span>
+            </label>
+
+            <label>
+              <input type="radio" name="${name}" value="5">
+              <span>5<br>Sangat tinggi</span>
+            </label>
+
+          </div>
+
+        </div>
+
+      `;
+
+    });
+
+  });
+
+}
+
+
+function getDimensionScore(dim) {
+
+  let total = 0;
+
+  questions[dim].forEach((q, index) => {
+
+    const selected =
+      document.querySelector(
+        `input[name="${dim + index}"]:checked`
+      );
+
+    if (!selected) {
+      throw new Error(
+        "Mohon lengkapi seluruh pertanyaan."
+      );
+    }
+
+    total += Number(selected.value);
+
+  });
+
+  const max =
+    questions[dim].length * 5;
+
+  return Math.round((total / max) * 100);
+
+}
+
+
+function category(score) {
+
+  if (score < 40) {
+    return "Rendah";
+  }
+
+  if (score < 60) {
+    return "Rentan";
+  }
+
+  if (score < 80) {
+    return "Berkembang";
+  }
+
+  return "Tinggi";
+
+}
+
+
+function calculateScore() {
+
+  try {
+
+    const A = getDimensionScore("A");
+    const C = getDimensionScore("C");
+    const M = getDimensionScore("M");
+    const T = getDimensionScore("T");
+
+
+    /*
+      Rumus sesuai kerangka penelitian:
+
+      DRI = (A + C + M + T) / 4
+    */
+
+    const DRI =
+      Math.round((A + C + M + T) / 4);
+
+
+    document.getElementById("totalScore")
+      .innerText = DRI;
+
+    document.getElementById("category")
+      .innerText = category(DRI);
+
+
+    showDimension("A", A);
+    showDimension("C", C);
+    showDimension("M", M);
+    showDimension("T", T);
+
+
+    /*
+      Untuk segmentasi prototype:
+
+      Capability = C
+
+      Resilience = rata-rata A, M, T
+
+      Ini merupakan operationalisasi prototype,
+      bukan hasil validasi empiris.
+    */
+
+    const resilience =
+      Math.round((A + M + T) / 3);
+
+
+    generateSegment(C, resilience);
+
+    generateRecommendations(A, C, M, T);
+
+
+    document.getElementById("result")
+      .style.display = "block";
+
+
+    document.getElementById("result")
+      .scrollIntoView({
+        behavior: "smooth"
+      });
+
+  }
+
+  catch(error) {
+
+    alert(error.message);
+
+  }
+
+}
+
+
+function showDimension(dim, score) {
+
+  document.getElementById(
+    "score" + dim
+  ).innerText = score;
+
+  document.getElementById(
+    "bar" + dim
+  ).style.width = score + "%";
+
+}
+
+
+function generateSegment(capability, resilience) {
+
+  let name = "";
+  let description = "";
+
+
+  if (capability < 60 && resilience < 60) {
+
+    name = "Digital Fragile";
+
+    description =
+      "Kapabilitas digital dan ketahanan relatif rendah. " +
+      "Prioritas diarahkan pada penguatan fondasi digital, " +
+      "literasi, keamanan digital, pencatatan sederhana, " +
+      "dan penggunaan pembayaran digital.";
+
+  }
+
+
+  else if (capability >= 60 && resilience < 60) {
+
+    name = "Digitally Active but Vulnerable";
+
+    description =
+      "Kapabilitas digital relatif lebih baik, tetapi " +
+      "ketahanan masih rendah. Fokus diarahkan pada " +
+      "diversifikasi pasar, manajemen stok, pemasok, " +
+      "dan kesiapan menghadapi gangguan.";
+
+  }
+
+
+  else if (capability < 60 && resilience >= 60) {
+
+    name = "Resilient but Digitally Shallow";
+
+    description =
+      "Ketahanan relatif baik tetapi kapabilitas digital " +
+      "masih terbatas. Digitalisasi dilakukan secara " +
+      "bertahap sesuai kebutuhan usaha, bukan melalui " +
+      "pelatihan digital yang seragam.";
+
+  }
+
+
+  else {
+
+    name = "Digital Resilient";
+
+    description =
+      "Kapabilitas digital dan ketahanan relatif tinggi. " +
+      "UMKM dapat diarahkan pada scale-up, business matching, " +
+      "onboarding pemasok, dan perluasan pasar antardaerah.";
+
+  }
+
+
+  document.getElementById(
+    "segmentName"
+  ).innerText = name;
+
+
+  document.getElementById(
+    "segmentDescription"
+  ).innerText = description;
+
+}
+
+
+function generateRecommendations(A, C, M, T) {
+
+  const recommendations = [];
+
+
+  if (A < 60) {
+
+    recommendations.push(
+      "Perkuat akses dan penggunaan dasar digital, " +
+      "termasuk pembayaran digital dan kanal digital."
+    );
+
+  }
+
+
+  if (C < 60) {
+
+    recommendations.push(
+      "Prioritaskan literasi dan kapabilitas digital, " +
+      "pencatatan transaksi, pengelolaan pelanggan, " +
+      "katalog digital, serta keamanan akun."
+    );
+
+  }
+
+
+  if (M < 60) {
+
+    recommendations.push(
+      "Prioritaskan diversifikasi kanal penjualan, " +
+      "pengembangan pelanggan baru, dan perluasan pasar."
+    );
+
+  }
+
+
+  if (T < 60) {
+
+    recommendations.push(
+      "Perkuat kemampuan adaptasi terhadap perubahan " +
+      "produk, pemasok, metode pemesanan, dan operasi."
+    );
+
+  }
+
+
+  if (recommendations.length === 0) {
+
+    recommendations.push(
+      "Pertahankan kapabilitas dan ketahanan yang telah baik. " +
+      "Prioritas berikutnya dapat diarahkan pada scale-up, " +
+      "business matching, onboarding pemasok, dan perluasan pasar."
+    );
+
+  }
+
+
+  document.getElementById(
+    "recommendations"
+  ).innerHTML =
+    recommendations
+      .map(
+        item =>
+          `<div class="recommendation">✓ ${item}</div>`
+      )
+      .join("");
+
+}
+
+
+createQuestions();
+
+</script>
+
+</body>
+</html>
